@@ -155,7 +155,10 @@ export const assetImg = (id, width = 1000) =>
 
 // Riscrive le immagini dentro il corpo HTML della news aggiungendo la
 // trasformazione Directus (webp + resize). Gli URL salvati sono "puliti" (niente query).
-const ASSET_RE = /(https:\/\/opalescent-hoatzin\.pikapod\.net\/assets\/[a-f0-9-]+)(?!\?)/gi;
+// Tutti e due gli indirizzi del pod (dal 19/10/2026 le immagini nuove nascono su api.anigami.eu). Il lookahead esclude
+// anche id e query già presenti: prima, su un URL con «?», l'espressione tornava indietro di un carattere e infilava i
+// parametri dentro l'id.
+const ASSET_RE = /(https:\/\/(?:opalescent-hoatzin\.pikapod\.net|api\.anigami\.eu)\/assets\/[a-f0-9-]+)(?![a-f0-9?-])/gi;
 export function optimizeBodyImages(html, width = 1000) {
   if (!html) return html;
   return html.replace(ASSET_RE, `$1?width=${width}&format=webp&quality=80`);
